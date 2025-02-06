@@ -41,7 +41,7 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
       
-      - name: Contruir imagen de docker..
+      - name: Contruir imagen de docker.....
         run: |
           docker build -t rangulo1972/jenkins-node:latest .
 
