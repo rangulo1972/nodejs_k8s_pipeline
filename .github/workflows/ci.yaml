@@ -1,0 +1,56 @@
+name: Flujo de trabajo para construir image
+
+on: 
+  push:
+    branches:
+      - develop
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias...
+        run: npm install
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Instalar dependencias...
+        run: npm install
+
+      - name: Ejecutar tests...
+        run: npm run test
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+      
+      - name: Contruir imagen de docker..
+        run: |
+          docker build -t fercdevv/jenkins-node:latest .
+
+      - name: Autenticando en dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      
+      - name: Publicando imagen al dockerhub..
+        run: |
+          docker push fercdevv/jenkins-node:latest
