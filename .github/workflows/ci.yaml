@@ -30,10 +30,10 @@ jobs:
         with:
           node-version: '18'
       
-      - name: Instalar dependencias...
+      - name: Instalar dependencias.......!!
         run: npm install
 
-      - name: Ejecutar tests...
+      - name: Ejecutar tests......!!
         run: npm run test
   build:
     runs-on: ubuntu-latest
@@ -41,7 +41,7 @@ jobs:
       - name: Clonar repositorio
         uses: actions/checkout@v4
       
-      - name: Contruir imagen de docker.....
+      - name: Contruir imagen de docker.....!!
         run: |
           docker build -t rangulo1972/jenkins-node:latest .
 
@@ -51,6 +51,6 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
       
-      - name: Publicando imagen al dockerhub..
+      - name: Publicando imagen al dockerhub...!!
         run: |
           docker push rangulo1972/jenkins-node:latest
