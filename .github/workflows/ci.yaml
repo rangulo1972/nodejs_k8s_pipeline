@@ -54,16 +54,3 @@ jobs:
       - name: Publicando imagen al dockerhub.....
         run: |
           docker push rangulo1972/jenkins-node:latest
-  
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v4
-      
-      - name: Configurar kubectl...
-        uses: actions-hub/kubectl@master
-        env:
-          KUBE_CONFIG: ${{ secrets.CLUSTER_KUBE_CONFIG_K8 }}
-        with:
-          args: apply -f deployment.yaml
