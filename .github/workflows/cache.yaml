@@ -1,0 +1,20 @@
+name: Flujo de trabajo para validar cache de otro workflow
+
+on: 
+  push:
+    branches:
+      - codigo
+
+jobs:      
+  cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restaurar dependencias de npm
+        uses: actions/cache/restore@v4
+        id: cache-npm-packages
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-dependencies
+
+      - name: Reinstall npm project packages
+        run: npm --version
