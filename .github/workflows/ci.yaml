@@ -1,9 +1,9 @@
-name: Flujo de trabajo para construir image
+name: Flujo de trabajo para validar cache en actions
 
 on: 
   push:
     branches:
-      - main
+      - codigo
 
 jobs:
   install:
@@ -17,40 +17,32 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Instalar dependencias.....
+      - name: Guardar en cache npm install...
+        id: cache-npm-packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-dependencies
+
+      - name: Instalar dependencias...
         run: npm install
-  test:
+      
+  test-cache:
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - name: Clonar repositorio
         uses: actions/checkout@v4
 
-      - name: Configurar nodejs
-        uses: actions/setup-node@v4
+      - name: Restaurar dependencias de npm
+        uses: actions/cache/restore@v4
+        id: cache-npm-packages
         with:
-          node-version: '18'
-      
-      - name: Instalar dependencias.....
-        run: npm install
+          path: ~/.npm
+          key: ${{ runner.os }}-node-dependencies
 
-      - name: Ejecutar tests.....
+      - name: Reinstall npm project packages
+        run: npm i
+
+      - name: Ejecutar mis tests..
         run: npm run test
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clonar repositorio
-        uses: actions/checkout@v4
-      
-      - name: Contruir imagen de docker......
-        run: |
-          docker build -t rangulo1972/jenkins-node:latest .
-
-      - name: Autenticando en dockerhub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-      
-      - name: Publicando imagen al dockerhub.....
-        run: |
-          docker push rangulo1972/jenkins-node:latest
